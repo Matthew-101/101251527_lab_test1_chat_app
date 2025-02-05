@@ -1,0 +1,24 @@
+<div id="chat">
+    <input type="text" id="message" placeholder="Type a message..." />
+    <button onclick="sendMessage()">Send</button>
+  </div>
+  
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io("http://localhost:5000");
+    const username = localStorage.getItem("username");
+    const room = "devops"; // Example room
+  
+    socket.emit("joinRoom", room);
+  
+    function sendMessage() {
+      const message = document.getElementById("message").value;
+      socket.emit("sendMessage", { from_user: username, room, message });
+      document.getElementById("message").value = "";
+    }
+  
+    socket.on("receiveMessage", (msg) => {
+      console.log(`${msg.from_user}: ${msg.message}`);
+    });
+  </script>
+  
